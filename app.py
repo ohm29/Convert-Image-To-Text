@@ -15,14 +15,11 @@ def get_grayscale(image):
 # noise removal
 def remove_noise(image):
     return cv2.medianBlur(image,5)
- 
+
 #thresholding
 def thresholding(image):
     return cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-
-
 app = Flask(__name__, template_folder='templates')
-
 @app.route('/ocr', methods=['GET', 'POST'])
 def ocr():
     if request.method == 'POST':
@@ -41,9 +38,6 @@ def ocr():
         return render_template('img2text.html',result=text)
     else:
         return render_template('img2text.html')
- 
-    
-    
 # main driver function
 if __name__ == '__main__':
 
