@@ -114,7 +114,7 @@
     <header class="hero-header py-4 mb-5">
       <div class="container text-center">
         <h1 class="fw-bold"><i class="bi bi-file-earmark-text me-2"></i>Image2Text</h1>
-        <p class="lead mb-0 opacity-75">Extract text from images using EasyOCR or Tesseract OCR</p>
+        <p class="lead mb-0 opacity-75">Extract text from images using EasyOCR</p>
       </div>
     </header>
 
@@ -126,33 +126,6 @@
           <div class="card p-4">
             <h5 class="card-title mb-3"><i class="bi bi-upload me-2"></i>Upload Image</h5>
             <form action="/ocr" method="post" enctype="multipart/form-data">
-
-              <!-- Model Selection -->
-              <label class="form-label fw-semibold">OCR Model</label>
-              <div class="d-flex gap-4 mb-3">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="model"
-                    id="modelEasyOCR"
-                    value="easyocr"
-                    {% if model != 'tesseract' %}checked{% endif %}
-                  />
-                  <label class="form-check-label" for="modelEasyOCR">EasyOCR</label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="model"
-                    id="modelTesseract"
-                    value="tesseract"
-                    {% if model == 'tesseract' %}checked{% endif %}
-                  />
-                  <label class="form-check-label" for="modelTesseract">Tesseract OCR</label>
-                </div>
-              </div>
 
               <!-- File Input -->
               <div class="input-group">
@@ -244,12 +217,6 @@
                     <td><span class="badge bg-danger">Yes</span></td>
                     <td>Image file (PNG, JPG, JPEG, BMP, TIFF, WebP)</td>
                   </tr>
-                  <tr>
-                    <td><code>model</code></td>
-                    <td>String</td>
-                    <td><span class="badge bg-secondary">No</span></td>
-                    <td>OCR engine — <code>easyocr</code> (default) or <code>tesseract</code></td>
-                  </tr>
                 </tbody>
               </table>
             </div>
@@ -271,8 +238,7 @@
               <!-- cURL -->
               <div class="tab-pane fade show active" id="curlPanel" role="tabpanel">
 <pre><span class="text-info">curl</span> -X POST http://localhost:5000/api/ocr \
-  -F <span class="text-warning">"file=@image.png"</span> \
-  -F <span class="text-warning">"model=easyocr"</span></pre>
+  -F <span class="text-warning">"file=@image.png"</span></pre>
               </div>
               <!-- Python -->
               <div class="tab-pane fade" id="pythonPanel" role="tabpanel">
@@ -280,16 +246,14 @@
 
 url = <span class="text-warning">"http://localhost:5000/api/ocr"</span>
 files = {<span class="text-warning">"file"</span>: open(<span class="text-warning">"image.png"</span>, <span class="text-warning">"rb"</span>)}
-data  = {<span class="text-warning">"model"</span>: <span class="text-warning">"tesseract"</span>}
 
-resp = requests.post(url, files=files, data=data)
+resp = requests.post(url, files=files)
 print(resp.json())</pre>
               </div>
               <!-- JavaScript -->
               <div class="tab-pane fade" id="jsPanel" role="tabpanel">
 <pre><span class="text-info">const</span> form = <span class="text-info">new</span> FormData();
 form.append(<span class="text-warning">"file"</span>, fileInput.files[<span class="text-success">0</span>]);
-form.append(<span class="text-warning">"model"</span>, <span class="text-warning">"easyocr"</span>);
 
 <span class="text-info">const</span> res = <span class="text-info">await</span> fetch(<span class="text-warning">"http://localhost:5000/api/ocr"</span>, {
   method: <span class="text-warning">"POST"</span>,
@@ -306,8 +270,7 @@ console.log(data);</pre>
               <div class="col-md-6">
                 <p class="mb-1 text-muted small">Success <span class="badge bg-success">200</span></p>
 <pre>{
-  <span class="text-info">"model"</span>: <span class="text-warning">"easyocr"</span>,
-  <span class="text-info">"text"</span>:  <span class="text-warning">"Extracted text…"</span>
+  <span class="text-info">"text"</span>: <span class="text-warning">"Extracted text…"</span>
 }</pre>
               </div>
               <div class="col-md-6">
@@ -325,7 +288,7 @@ console.log(data);</pre>
     </div>
 
     <footer class="text-center py-3 text-muted small">
-      Image2Text OCR Service &mdash; Powered by EasyOCR &amp; Tesseract
+      Image2Text OCR Service &mdash; Powered by EasyOCR
     </footer>
 
     <script
