@@ -1,0 +1,53 @@
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution and packaging files
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask specific files
+instance/
+.webassets-cache
+
+# Environment variables
+.env
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+
+# Editor-specific files (e.g., VS Code, PyCharm)
+.idea/
+.vscode/
+
+# Logs and databases (if temporary)
+*.log
+*.sqlite3 # Adjust if you want your database tracked
