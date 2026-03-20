@@ -3,67 +3,334 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bootstrap demo</title>
+    <title>Image2Text — OCR Service</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <style>
-        body {
-          background-color: #edecee;
-        }
-        
+      :root {
+        --navy: #001F3D;
+        --orange: #ED985F;
+        --peach: #F7B980;
+        --light-gray: #E6E6E6;
+      }
+      body {
+        background-color: var(--light-gray);
+        min-height: 100vh;
+      }
+      .hero-header {
+        background: linear-gradient(135deg, var(--navy) 0%, #003366 100%);
+        color: #fff;
+        border-radius: 0 0 1.5rem 1.5rem;
+      }
+      .hero-header .lead { color: var(--peach); }
+      .card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 .5rem 1.5rem rgba(0, 31, 61, .1);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--orange) 0%, var(--peach) 100%);
+        border: none;
+        color: var(--navy);
+        font-weight: 600;
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #e0874d 0%, var(--orange) 100%);
+        color: var(--navy);
+      }
+      .btn-outline-secondary {
+        border-color: var(--navy);
+        color: var(--navy);
+      }
+      .btn-outline-secondary:hover {
+        background-color: var(--navy);
+        color: #fff;
+      }
+      .form-check-input:checked {
+        background-color: var(--orange);
+        border-color: var(--orange);
+      }
+      .form-check-input:focus {
+        border-color: var(--peach);
+        box-shadow: 0 0 0 .25rem rgba(237, 152, 95, .25);
+      }
+      .form-control:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 .25rem rgba(237, 152, 95, .25);
+      }
+      pre {
+        background-color: var(--navy);
+        color: #e2e8f0;
+        border-radius: .75rem;
+        padding: 1rem;
+        font-size: .85rem;
+        overflow-x: auto;
+      }
+      pre .text-info { color: var(--peach) !important; }
+      pre .text-warning { color: var(--orange) !important; }
+      pre .text-success { color: #a6e3a1 !important; }
+      .api-section .nav-link.active {
+        background-color: var(--navy);
+        color: #fff;
+      }
+      .api-section .nav-link {
+        color: var(--navy);
+        font-weight: 500;
+      }
+      .api-section .nav-link:hover:not(.active) {
+        color: var(--orange);
+      }
+      .badge-method {
+        font-size: .75rem;
+        padding: .35em .65em;
+      }
+      .table thead.table-light th {
+        background-color: #f0ede8;
+        color: var(--navy);
+      }
+      .card-title {
+        color: var(--navy);
+      }
+      .fw-semibold {
+        color: var(--navy);
+      }
+      footer {
+        color: var(--navy) !important;
+        opacity: .6;
+      }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Image2Text</h1>
-      <div class="row">
-        <div class="col-md"></div>
-        <div class="col-md">
-          <form action="/ocr" method="post" enctype="multipart/form-data">
-            <div class="input-group">
-              <input
-                type="file"
+
+    <!-- Header -->
+    <header class="hero-header py-4 mb-5">
+      <div class="container text-center">
+        <h1 class="fw-bold"><i class="bi bi-file-earmark-text me-2"></i>Image2Text</h1>
+        <p class="lead mb-0 opacity-75">Extract text from images using EasyOCR or Tesseract OCR</p>
+      </div>
+    </header>
+
+    <div class="container pb-5">
+
+      <!-- OCR Form -->
+      <div class="row justify-content-center mb-5">
+        <div class="col-lg-7">
+          <div class="card p-4">
+            <h5 class="card-title mb-3"><i class="bi bi-upload me-2"></i>Upload Image</h5>
+            <form action="/ocr" method="post" enctype="multipart/form-data">
+
+              <!-- Model Selection -->
+              <label class="form-label fw-semibold">OCR Model</label>
+              <div class="d-flex gap-4 mb-3">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="model"
+                    id="modelEasyOCR"
+                    value="easyocr"
+                    {% if model != 'tesseract' %}checked{% endif %}
+                  />
+                  <label class="form-check-label" for="modelEasyOCR">EasyOCR</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="model"
+                    id="modelTesseract"
+                    value="tesseract"
+                    {% if model == 'tesseract' %}checked{% endif %}
+                  />
+                  <label class="form-check-label" for="modelTesseract">Tesseract OCR</label>
+                </div>
+              </div>
+
+              <!-- File Input -->
+              <div class="input-group">
+                <input
+                  type="file"
+                  class="form-control"
+                  id="fileInput"
+                  name="file"
+                  accept="image/*"
+                  aria-label="Upload"
+                />
+                <button class="btn btn-primary px-4" type="submit">
+                  <i class="bi bi-search me-1"></i> Extract
+                </button>
+              </div>
+              <div class="form-text">Supports PNG, JPG, JPEG, BMP, TIFF, WebP (max 16 MB)</div>
+            </form>
+
+            <!-- Result -->
+            <div class="mt-4">
+              <label for="resultArea" class="form-label fw-semibold">
+                <i class="bi bi-card-text me-1"></i>Result
+              </label>
+              <textarea
                 class="form-control"
-                id="inputGroupFile04"
-                name="file"
-                aria-describedby="inputGroupFileAddon04"
-                aria-label="Upload"
-              />
+                id="resultArea"
+                rows="8"
+                readonly
+                placeholder="Extracted text will appear here…"
+              >{{ result or '' }}</textarea>
+              {% if result %}
               <button
-                class="btn btn-outline-secondary"
-                type="submit"
-                id="inputGroupFileAddon04"
+                class="btn btn-sm btn-outline-secondary mt-2"
+                type="button"
+                onclick="navigator.clipboard.writeText(document.getElementById('resultArea').value)"
               >
-                Button
+                <i class="bi bi-clipboard me-1"></i>Copy to clipboard
               </button>
+              {% endif %}
             </div>
-          </form>
-          <br>
-          <div class="result">
-            {% if result %}
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Result</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10">{{result}}</textarea>
-            </div>
-            {% else %}
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Result</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
-            </div>
-            {% endif %}
           </div>
         </div>
-        <div class="col-md"></div>
       </div>
+
+      <!-- API Documentation -->
+      <div class="row justify-content-center api-section">
+        <div class="col-lg-9">
+          <div class="card p-4">
+            <h5 class="card-title mb-3"><i class="bi bi-book me-2"></i>API Documentation</h5>
+            <p class="text-muted">Use the HTTP API to integrate OCR into your own applications.</p>
+
+            <div class="table-responsive mb-4">
+              <table class="table table-bordered align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Endpoint</th>
+                    <th>Method</th>
+                    <th>Content-Type</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>/api/ocr</code></td>
+                    <td><span class="badge bg-success badge-method">POST</span></td>
+                    <td><code>multipart/form-data</code></td>
+                    <td>Extract text from an uploaded image</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Parameters -->
+            <h6 class="fw-semibold">Request Parameters</h6>
+            <div class="table-responsive mb-4">
+              <table class="table table-bordered align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Field</th>
+                    <th>Type</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>file</code></td>
+                    <td>File</td>
+                    <td><span class="badge bg-danger">Yes</span></td>
+                    <td>Image file (PNG, JPG, JPEG, BMP, TIFF, WebP)</td>
+                  </tr>
+                  <tr>
+                    <td><code>model</code></td>
+                    <td>String</td>
+                    <td><span class="badge bg-secondary">No</span></td>
+                    <td>OCR engine — <code>easyocr</code> (default) or <code>tesseract</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Examples Nav -->
+            <ul class="nav nav-pills mb-3" id="apiExamplesTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="curl-tab" data-bs-toggle="pill" data-bs-target="#curlPanel" type="button" role="tab">cURL</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="python-tab" data-bs-toggle="pill" data-bs-target="#pythonPanel" type="button" role="tab">Python</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="js-tab" data-bs-toggle="pill" data-bs-target="#jsPanel" type="button" role="tab">JavaScript</button>
+              </li>
+            </ul>
+
+            <div class="tab-content" id="apiExamplesContent">
+              <!-- cURL -->
+              <div class="tab-pane fade show active" id="curlPanel" role="tabpanel">
+<pre><span class="text-info">curl</span> -X POST http://localhost:5000/api/ocr \
+  -F <span class="text-warning">"file=@image.png"</span> \
+  -F <span class="text-warning">"model=easyocr"</span></pre>
+              </div>
+              <!-- Python -->
+              <div class="tab-pane fade" id="pythonPanel" role="tabpanel">
+<pre><span class="text-info">import</span> requests
+
+url = <span class="text-warning">"http://localhost:5000/api/ocr"</span>
+files = {<span class="text-warning">"file"</span>: open(<span class="text-warning">"image.png"</span>, <span class="text-warning">"rb"</span>)}
+data  = {<span class="text-warning">"model"</span>: <span class="text-warning">"tesseract"</span>}
+
+resp = requests.post(url, files=files, data=data)
+print(resp.json())</pre>
+              </div>
+              <!-- JavaScript -->
+              <div class="tab-pane fade" id="jsPanel" role="tabpanel">
+<pre><span class="text-info">const</span> form = <span class="text-info">new</span> FormData();
+form.append(<span class="text-warning">"file"</span>, fileInput.files[<span class="text-success">0</span>]);
+form.append(<span class="text-warning">"model"</span>, <span class="text-warning">"easyocr"</span>);
+
+<span class="text-info">const</span> res = <span class="text-info">await</span> fetch(<span class="text-warning">"http://localhost:5000/api/ocr"</span>, {
+  method: <span class="text-warning">"POST"</span>,
+  body: form,
+});
+<span class="text-info">const</span> data = <span class="text-info">await</span> res.json();
+console.log(data);</pre>
+              </div>
+            </div>
+
+            <!-- Response -->
+            <h6 class="fw-semibold mt-4">Response (JSON)</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <p class="mb-1 text-muted small">Success <span class="badge bg-success">200</span></p>
+<pre>{
+  <span class="text-info">"model"</span>: <span class="text-warning">"easyocr"</span>,
+  <span class="text-info">"text"</span>:  <span class="text-warning">"Extracted text…"</span>
+}</pre>
+              </div>
+              <div class="col-md-6">
+                <p class="mb-1 text-muted small">Error <span class="badge bg-danger">400</span> / <span class="badge bg-danger">500</span></p>
+<pre>{
+  <span class="text-info">"error"</span>: <span class="text-warning">"Error message"</span>
+}</pre>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
+
+    <footer class="text-center py-3 text-muted small">
+      Image2Text OCR Service &mdash; Powered by EasyOCR &amp; Tesseract
+    </footer>
+
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
   </body>

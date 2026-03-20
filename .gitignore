@@ -48,6 +48,12 @@ coverage.xml
 .idea/
 .vscode/
 
+# Vercel
+.vercel
+
+# Config secrets
+config/env.json
+
 # Logs and databases (if temporary)
 *.log
 *.sqlite3 # Adjust if you want your database tracked
